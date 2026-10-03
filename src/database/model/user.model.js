@@ -41,6 +41,10 @@ const userSchema = mongoose.Schema({
     },
     coverImage: {
         type: [String],
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
     }
 }, {
     timestamps: true
