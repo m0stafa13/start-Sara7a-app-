@@ -1,7 +1,7 @@
-import { checkPassword, generateHash } from "../../common/index.js"
+import argon2 from "argon2";
+import { checkPassword, checkPasswordArg2, generateHash, generateHashArg2 } from "../../common/index.js"
 import { env } from "../../config/config.service.js";
 import { userModel } from "../../database/model/user.model.js";
-import bcrypt from "bcrypt"
 
 // sign up 
 export const signUp = async (body) => {
@@ -17,7 +17,7 @@ export const signUp = async (body) => {
             message: "user already exists"
         }
     } else {                                      // sault round    when you up this salt will make responsive bad
-        let hashedPassword = await generateHash({ planText: password, salt: env.saltRound })
+        let hashedPassword = await generateHashArg2({ planText: password })
         if (hashedPassword) {
             let addUser = await userModel.create({ name, email, password: hashedPassword, age })
             if (addUser) {
@@ -37,18 +37,23 @@ export const signUp = async (body) => {
         }
     }
 }
+// argon 2 dose not want salt round 
+// in bcrypt we send SALT round from .env file but in argon 2 do not salt round
 // sign in  
 export const signIn = async (body) => {
     try {
         let { email, password } = body
+
+
         let userData = await userModel.findOne({ email })
         if (!userData) {
             return {
                 message: "email is not found"
             }
         }
-        //check password
-        let isMatch = await checkPassword({ planText: password, hashed: userData.password })
+
+        //check password with argon2
+        let isMatch = await checkPasswordArg2({ planText: password, hashed: userData.password })
         if (isMatch) {
             return {
                 message: "login successfully",
