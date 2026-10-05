@@ -8,4 +8,4 @@ databaseConnection()
 app.use(express.json())
 app.use("/auth", authRouter)
 
-app.listen(env.port, () => console.log(`Example app listening on port ${env.port}!`))
+app.listen(env.port, () => console.log(`Example app listening on port ${env.port}!`)) 

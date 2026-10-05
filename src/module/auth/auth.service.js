@@ -10,8 +10,6 @@ export const signUp = async (body) => {
         return {
             message: "confirm password is not match the password"
         }
-    } else {
-
     }
     let userExists = await userModel.findOne({ email })
     if (userExists) {
