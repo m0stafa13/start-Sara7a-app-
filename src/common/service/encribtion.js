@@ -1,5 +1,5 @@
-// import bcrypt from "bcrypt"
-import argon2 from "argon2"
+import bcrypt from "bcrypt"
+import * as argon2 from "argon2"
 import { env } from "../../config/config.service.js"
 export const generateHash = async ({ planText, salt = env.saltRound }) => {
     let encData = await bcrypt.hash(planText, Number(salt))
