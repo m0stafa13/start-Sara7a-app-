@@ -2,7 +2,7 @@ import argon2 from "argon2";
 import { checkPassword, checkPasswordArg2, generateHash, generateHashArg2 } from "../../common/index.js"
 import { userModel } from "../../database/model/user.model.js";
 import { BadRequestException, ConflictException, ErrorResponse, NotFoundException } from "../../common/exception/error.exceptions.js";
-
+import jwt from "jsonwebtoken"
 // sign up 
 export const signUp = async (body) => {
     let { name, email, password, age, confirmPassword } = body
@@ -41,11 +41,28 @@ export const signIn = async (body) => {
     //check password with argon2
     let isMatch = await checkPassword({ planText: password, hashed: userData.password })
     if (isMatch) {
+        // generate token 
+        let token = jwt.sign({ id: userData._id, email: userData.email }, "hello")
         return {
             message: "login successfully",
-            user: userData
+            token
         }
     } else {
         return BadRequestException({ message: "incorrect password" })
+    }
+}
+// get user by id 
+export const getUserById = async (data) => {
+    let { id } = data
+    let findUser = await userModel.findById(id)
+    console.log(findUser);
+
+    if (findUser) {
+        return {
+            message: "user founded successfully",
+            user: findUser
+        }
+    } else {
+        return BadRequestException("some thing went wrdddddong")
     }
 }

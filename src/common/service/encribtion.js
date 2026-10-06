@@ -14,7 +14,7 @@ export const checkPassword = async ({ planText, hashed }) => {
 // dose not want to salt round
 export const generateHashArg2 = async ({ planText }) => {
     let encData = await argon2.hash(planText)
-    return encData
+    return encData  
 }
 // function to check password from front and from back
 export const checkPasswordArg2 = async ({ planText, hashed }) => {

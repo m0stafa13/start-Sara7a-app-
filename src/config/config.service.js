@@ -8,6 +8,6 @@ let mode = process.env.MODE
 export const env = {
     port,
     uri,
-    saltRound,
+    saltRound, 
     mode
 }
