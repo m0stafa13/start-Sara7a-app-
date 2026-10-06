@@ -3,6 +3,7 @@ import { checkPassword, checkPasswordArg2, generateHash, generateHashArg2 } from
 import { userModel } from "../../database/model/user.model.js";
 import { BadRequestException, ConflictException, ErrorResponse, NotFoundException } from "../../common/exception/error.exceptions.js";
 import jwt from "jsonwebtoken"
+import { generateToken } from "../../common/service/token.service.js";
 // sign up 
 export const signUp = async (body) => {
     let { name, email, password, age, confirmPassword } = body
@@ -42,10 +43,11 @@ export const signIn = async (body) => {
     let isMatch = await checkPassword({ planText: password, hashed: userData.password })
     if (isMatch) {
         // generate token 
-        let token = jwt.sign({ id: userData._id, email: userData.email }, "hello")
+        let userToken = await generateToken({ email: userData.email, id: userData._id })
+
         return {
             message: "login successfully",
-            token
+            token: userToken
         }
     } else {
         return BadRequestException({ message: "incorrect password" })
@@ -55,14 +57,11 @@ export const signIn = async (body) => {
 export const getUserById = async (data) => {
     let { id } = data
     let findUser = await userModel.findById(id)
-    console.log(findUser);
-
     if (findUser) {
         return {
-            message: "user founded successfully",
+            message: "user found successfully",
             user: findUser
         }
-    } else {
-        return BadRequestException("some thing went wrdddddong")
     }
+    return BadRequestException({ message: "user not found" })
 }
