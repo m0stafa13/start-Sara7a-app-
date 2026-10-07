@@ -6,6 +6,7 @@
   "scripts": {
     "run:dev": "cross-env NODE_ENV=dev node --watch src/main.js",
     "run:prod": "cross-env NODE_ENV=prod node --watch src/main.js"
+    
   },
   "keywords": [],
   "author": "",

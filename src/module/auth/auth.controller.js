@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { getUserById, signIn, signUp } from "./auth.service.js";
-import { auth } from "../../common/service/token.service.js";
+import { auth } from "../../common/middleware/index.js";
 
 const router = Router()
 // sign up 

@@ -3,7 +3,7 @@ import { checkPassword, checkPasswordArg2, generateHash, generateHashArg2 } from
 import { userModel } from "../../database/model/user.model.js";
 import { BadRequestException, ConflictException, ErrorResponse, NotFoundException } from "../../common/exception/error.exceptions.js";
 import jwt from "jsonwebtoken"
-import { generateToken } from "../../common/service/token.service.js";
+import { generateToken } from "../../common/index.js";
 // sign up 
 export const signUp = async (body) => {
     let { name, email, password, age, confirmPassword } = body
@@ -43,11 +43,12 @@ export const signIn = async (body) => {
     let isMatch = await checkPassword({ planText: password, hashed: userData.password })
     if (isMatch) {
         // generate token 
-        let userToken = await generateToken({ email: userData.email, id: userData._id })
+        let { accessToken } = await generateToken(userData)
+
 
         return {
             message: "login successfully",
-            token: userToken
+            token: accessToken
         }
     } else {
         return BadRequestException({ message: "incorrect password" })
