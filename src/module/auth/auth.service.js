@@ -1,5 +1,5 @@
 import argon2 from "argon2";
-import { checkPassword, checkPasswordArg2, generateHash, generateHashArg2 } from "../../common/index.js"
+import { checkPassword, checkPasswordArg2, generateAccessTokenFromRefresh, generateHash, generateHashArg2 } from "../../common/index.js"
 import { userModel } from "../../database/model/user.model.js";
 import { BadRequestException, ConflictException, ErrorResponse, NotFoundException } from "../../common/exception/error.exceptions.js";
 import jwt from "jsonwebtoken"
@@ -43,12 +43,11 @@ export const signIn = async (body) => {
     let isMatch = await checkPassword({ planText: password, hashed: userData.password })
     if (isMatch) {
         // generate token 
-        let { accessToken } = await generateToken(userData)
-
-
+        let { accessToken, refreshToken } = await generateToken(userData)
         return {
             message: "login successfully",
-            token: accessToken
+            token: accessToken,
+            ref: refreshToken
         }
     } else {
         return BadRequestException({ message: "incorrect password" })
@@ -65,4 +64,18 @@ export const getUserById = async (data) => {
         }
     }
     return BadRequestException({ message: "user not found" })
+}
+
+
+// generate access token 
+export const generateAccessToken = async (body) => {
+    let { refreshToken } = body
+    let { newAccessToken } = await generateAccessTokenFromRefresh(refreshToken)
+    if (newAccessToken) {
+        return {
+            accessToken: newAccessToken
+        }
+    } else {
+        return BadRequestException({ message: "invalid token" })
+    }
 }

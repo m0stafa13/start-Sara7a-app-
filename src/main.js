@@ -10,10 +10,11 @@ app.use("/auth", authRouter)
 
 app.use((err, req, res, next) => {
     // stack from error will describe error details for developer
+    let status = err.cause ? err.cause.status : 500
     let stack = env.mode == "dev" ? err.stack : null
-    const status = err.cause ? err.cause.status : 500
     res.status(status).json({
-        message: err.message, stack
+        message: err.message,
+        stack
     })
 })
 app.listen(env.port, () => console.log(`Example app listening on port ${env.port}!`)) 
