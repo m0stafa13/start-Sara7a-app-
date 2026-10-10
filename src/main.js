@@ -8,7 +8,7 @@ databaseConnection()
 app.use(express.json())
 app.use("/auth", authRouter)
 
-app.use((err, req, res, next) => {
+app.use((err, req, res, next    ) => {
     // stack from error will describe error details for developer
     let status = err.cause ? err.cause.status : 500
     let stack = env.mode == "dev" ? err.stack : null

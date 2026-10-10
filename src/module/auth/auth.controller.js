@@ -14,7 +14,6 @@ router.get("/signIn", async (req, res) => {
     res.json(data)
 })
 // get user by id from token 
-
 router.get("/get-user-by-id-token", auth, async (req, res) => {
     let data = await getUserById(req.user)
     res.json(data)

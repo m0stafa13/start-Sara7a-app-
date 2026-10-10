@@ -28,8 +28,7 @@ export const generateToken = async (user) => {
     }
 
 }
-
-
+    
 //  generate access token 
 
 export const generateAccessTokenFromRefresh = async (refresh) => {
@@ -50,8 +49,6 @@ export const generateAccessTokenFromRefresh = async (refresh) => {
         default:
             break;
     }
-
-
     let decodedData = jwt.verify(refresh, refreshSignature)
     let newAccessToken = jwt.sign({ id: decodedData.id, email: decodedData.email }, signature, { audience: role, expiresIn: "30min" })
     return { newAccessToken }
