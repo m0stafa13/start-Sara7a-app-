@@ -8,13 +8,15 @@ databaseConnection()
 app.use(express.json())
 app.use("/auth", authRouter)
 
-app.use((err, req, res, next    ) => {
+app.use((err, req, res, next) => {
     // stack from error will describe error details for developer
     let status = err.cause ? err.cause.status : 500
     let stack = env.mode == "dev" ? err.stack : null
+    const extra = err.cause ? err.cause.extra : null
     res.status(status).json({
         message: err.message,
-        stack
+        stack,
+        extra
     })
 })
 app.listen(env.port, () => console.log(`Example app listening on port ${env.port}!`)) 
