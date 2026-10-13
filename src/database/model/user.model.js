@@ -22,7 +22,7 @@ const userSchema = mongoose.Schema({
         type: Number
     },
     gender: {
-        type: String,
+        type: Number,
         enum: GenderEnum,
         default: GenderEnum.Male
     },
@@ -45,7 +45,12 @@ const userSchema = mongoose.Schema({
     isVerified: {
         type: Boolean,
         default: false
+    },
+    dateOfBirth: {
+        type: Date,
+        required: true
     }
+
 }, {
     timestamps: true
 })

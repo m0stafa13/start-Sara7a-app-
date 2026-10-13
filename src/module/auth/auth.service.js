@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken"
 import { generateToken } from "../../common/index.js";
 // sign up 
 export const signUp = async (body) => {
-    let { name, email, password, age, confirmPassword } = body
+    let { name, email, password, age, confirmPassword, gender, dateOfBirth } = body
     if (password != confirmPassword) {
         return BadRequestException({ message: "Confirm password must be match with password" })
     }
@@ -16,7 +16,7 @@ export const signUp = async (body) => {
     } else {                                      // sault round    when you up this salt will make responsive bad
         let hashedPassword = await generateHash({ planText: password })
         if (hashedPassword) {
-            let addUser = await userModel.create({ name, email, password: hashedPassword, age })
+            let addUser = await userModel.create({ name, email, password: hashedPassword, age, gender, dateOfBirth })
             if (addUser) {
                 return {
                     message: "user added successfully",
