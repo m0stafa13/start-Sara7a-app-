@@ -26,7 +26,6 @@ export const generateToken = async (user) => {
         accessToken,
         refreshToken
     }
-
 }
     
 //  generate access token 
