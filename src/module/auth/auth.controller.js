@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { generateAccessToken, getUserById, signIn, signUp } from "./auth.service.js";
+import { generateAccessToken, getUserById, signIn, signUp, verifyAccount } from "./auth.service.js";
 import { auth } from "../../common/middleware/index.js";
 import { userLoginSchema, userSignupSchema } from "./auth.validation.js";
 import { validation } from "../../common/service/validation.service.js";
@@ -24,4 +24,12 @@ router.post("/generate-access-token", async (req, res) => {
     let accessToken = await generateAccessToken(req.body)
     res.json(accessToken)
 })
-export default router   
+// verify email 
+router.put("/verify-account", async (req, res) => {
+    let data = await verifyAccount(req.body)
+    res.json(data)
+})
+
+
+
+export default router

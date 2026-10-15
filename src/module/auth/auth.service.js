@@ -1,9 +1,8 @@
-import argon2 from "argon2";
 import { checkPassword, checkPasswordArg2, generateAccessTokenFromRefresh, generateHash, generateHashArg2 } from "../../common/index.js"
 import { userModel } from "../../database/model/user.model.js";
 import { BadRequestException, ConflictException, ErrorResponse, NotFoundException } from "../../common/exception/error.exceptions.js";
-import jwt from "jsonwebtoken"
 import { generateToken } from "../../common/index.js";
+import { sendEmail } from "../../common/middleware/sendEmail.js";
 // sign up 
 export const signUp = async (body) => {
     let { name, email, password, age, confirmPassword, gender, dateOfBirth } = body
@@ -16,7 +15,20 @@ export const signUp = async (body) => {
     } else {                                      // sault round    when you up this salt will make responsive bad
         let hashedPassword = await generateHash({ planText: password })
         if (hashedPassword) {
-            let addUser = await userModel.create({ name, email, password: hashedPassword, age, gender, dateOfBirth })
+
+
+            let otp = Math.round(Math.random() * 1000000)
+
+
+            let addUser = await userModel.create({ name, email, password: hashedPassword, age, gender, dateOfBirth, otp })
+
+
+
+            sendEmail({ to: email, subject: "sign up", html: `<h1> your otp is ${otp}</h1>` })
+
+
+
+
             if (addUser) {
                 return {
                     message: "user added successfully",
@@ -77,5 +89,29 @@ export const generateAccessToken = async (body) => {
         }
     } else {
         return BadRequestException({ message: "invalid token" })
+    }
+}
+
+
+
+
+
+// verify account using otp 
+export const verifyAccount = async (body) => {
+    let { email, otp } = body
+    let userData = await userModel.find({ email })
+    if (!userData[0]) {
+        throw NotFoundException({ message: "user not found" })
+    }
+    if (userData[0].isVerified) {
+        throw BadRequestException({ message: "user already verified" })
+    }
+    if (userData[0].otp == otp) {
+        userData[0].isVerified = true
+        userData[0].otp = null
+        await userData[0].save()
+        return userData
+    } else {
+        throw BadRequestException({ message: "otp is not match" })
     }
 }
