@@ -1,10 +1,11 @@
 import nodemailer from "nodemailer";
+import { env } from "../../config/config.service.js";
 
 const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-        user: "mosmahmoud080@gmail.com",
-        pass: "hsra xdhm kjzj hfcf"
+        user: env.mainEmail,
+        pass: env.pass
     }
 })
 
@@ -15,7 +16,7 @@ export const sendEmail = ({ to, subject, html }) => {
         from: "sara7a@gmail.com",
         to,
         subject,
-        html
+        html 
     })
     console.log("email send");
 }

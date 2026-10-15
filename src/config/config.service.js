@@ -9,6 +9,8 @@ let userSignature = process.env.USER_SIGNATURE
 let adminSignature = process.env.ADMIN_SIGNATURE
 let adminRefreshSignature = process.env.ADMIN_REFRESH_SIGNATURE
 let userRefreshSignature = process.env.USER_REFRESH_SIGNATURE
+let mainEmail = process.env.EMAIL
+let pass = process.env.PASSWORD
 
 export const env = {
     port,
@@ -18,5 +20,6 @@ export const env = {
     adminSignature,
     userSignature,
     adminRefreshSignature,
-    userRefreshSignature
+    userRefreshSignature,
+    mainEmail, pass
 }
