@@ -116,6 +116,19 @@ export const resendOtp = async (data) => {
         }
     }
     return BadRequestException({ message: "user not found" })
+}
 
 
+// get all users for admin
+export const getAllUser = async () => {
+    let data = await userModel.find()
+    if (data.length > 0) {
+        return {
+            message: "users fonded successfully",
+            users: data
+        }
+    }
+    return {
+        message: 'no user founded'
+    }
 }
