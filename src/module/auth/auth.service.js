@@ -15,20 +15,11 @@ export const signUp = async (body) => {
     } else {                                      // sault round    when you up this salt will make responsive bad
         let hashedPassword = await generateHash({ planText: password })
         if (hashedPassword) {
-
-
             let otp = Math.round(Math.random() * 1000000)
-
-
+            // adding user to db 
             let addUser = await userModel.create({ name, email, password: hashedPassword, age, gender, dateOfBirth, otp })
-
-
-
+            // sent otp to user to verify account 
             sendEmail({ to: email, subject: "sign up", html: `<h1> your otp is ${otp}</h1>` })
-
-
-
-
             if (addUser) {
                 return {
                     message: "user added successfully",
@@ -77,8 +68,6 @@ export const getUserById = async (data) => {
     }
     return BadRequestException({ message: "user not found" })
 }
-
-
 // generate access token 
 export const generateAccessToken = async (body) => {
     let { refreshToken } = body
@@ -91,11 +80,6 @@ export const generateAccessToken = async (body) => {
         return BadRequestException({ message: "invalid token" })
     }
 }
-
-
-
-
-
 // verify account using otp 
 export const verifyAccount = async (body) => {
     let { email, otp } = body
@@ -114,4 +98,24 @@ export const verifyAccount = async (body) => {
     } else {
         throw BadRequestException({ message: "otp is not match" })
     }
+}
+// resend otp  to verify account
+export const resendOtp = async (data) => {
+    let { email } = data
+    let userData = await userModel.findOne({ email })
+    if (userData) {
+        if (userData.isVerified) {
+            return BadRequestException({ message: "user already verified" })
+        }
+        let otp = Math.round(Math.random() * 1000000)
+        userData.otp = otp
+        userData.save()
+        sendEmail({ to: email, subject: `Resend otp from sara7a app`, html: `Your otp is ${otp}` })
+        return {
+            message: "OTP already sent on your email"
+        }
+    }
+    return BadRequestException({ message: "user not found" })
+
+
 }

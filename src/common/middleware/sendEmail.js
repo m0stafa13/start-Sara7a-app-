@@ -16,7 +16,8 @@ export const sendEmail = ({ to, subject, html }) => {
         from: "sara7a@gmail.com",
         to,
         subject,
-        html 
+        html
     })
-    console.log("email send");
+    console.log("email sent");
+
 }

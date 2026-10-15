@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { generateAccessToken, getUserById, signIn, signUp, verifyAccount } from "./auth.service.js";
+import { generateAccessToken, getUserById, resendOtp, signIn, signUp, verifyAccount } from "./auth.service.js";
 import { auth } from "../../common/middleware/index.js";
 import { userLoginSchema, userSignupSchema } from "./auth.validation.js";
 import { validation } from "../../common/service/validation.service.js";
@@ -29,7 +29,11 @@ router.put("/verify-account", async (req, res) => {
     let data = await verifyAccount(req.body)
     res.json(data)
 })
-
+// resend otp 
+router.get("/resend-otp", async (req, res) => {
+    let data = await resendOtp(req.body)
+    res.json(data)
+})
 
 
 export default router
