@@ -30,6 +30,7 @@ export const auth = async (req, res, next) => {
             let decodedData = jwt.verify(token, signature)
             if (decodedData) {
                 req.user = decodedData
+                 
                 next()
             }
             else {

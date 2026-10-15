@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { generateAccessToken, getAllUser, getUserById, resendOtp, signIn, signUp, verifyAccount } from "./auth.service.js";
-import { auth } from "../../common/middleware/index.js";
+import { auth, checkRole } from "../../common/middleware/index.js";
 import { userLoginSchema, userSignupSchema } from "./auth.validation.js";
 import { validation } from "../../common/service/validation.service.js";
 const router = Router()
@@ -35,7 +35,7 @@ router.get("/resend-otp", async (req, res) => {
     res.json(data)
 })
 
-router.get('/get-all-users', async (req, res) => {
+router.get('/get-all-users', auth, checkRole(["1"]), async (req, res) => {
     let data = await getAllUser()
     res.json(data)
 })
