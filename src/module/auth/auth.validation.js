@@ -9,9 +9,10 @@ export const userLoginSchema = z.strictObject({
 //! extend vs safeExtend
 // extend ==> we cans extend from another schema and override on it's validation 
 // safeExtend ==> we extend the values and cannot override on ti's validation and we extend the refine and superRefine also
+
 export const userSignupSchema = userLoginSchema.extend({
     name: z.string().includes(" ").min(3).max(50),
-    age: z.number(),
+    age: z.coerce.number(),
     gender: z.enum(GenderEnum),
     dateOfBirth: z.string(),
     confirmPassword: z.string().max(20).min(5)

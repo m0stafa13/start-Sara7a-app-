@@ -4,7 +4,15 @@ import { BadRequestException, ConflictException, ErrorResponse, NotFoundExceptio
 import { generateToken } from "../../common/index.js";
 import { sendEmail } from "../../common/middleware/sendEmail.js";
 // sign up 
-export const signUp = async (body) => {
+export const signUp = async (body, file) => {
+    let profileImage;
+    if (file) {
+        profileImage = file.path
+        console.log(profileImage);
+
+
+    }
+
     let { name, email, password, age, confirmPassword, gender, dateOfBirth } = body
     if (password != confirmPassword) {
         return BadRequestException({ message: "Confirm password must be match with password" })
@@ -17,7 +25,7 @@ export const signUp = async (body) => {
         if (hashedPassword) {
             let otp = Math.round(Math.random() * 1000000)
             // adding user to db 
-            let addUser = await userModel.create({ name, email, password: hashedPassword, age, gender, dateOfBirth, otp })
+            let addUser = await userModel.create({ name, email, password: hashedPassword, age, gender, dateOfBirth, otp, profileImage })
             // sent otp to user to verify account 
             sendEmail({ to: email, subject: "sign up", html: `<h1> your otp is ${otp}</h1>` })
             if (addUser) {
@@ -41,6 +49,9 @@ export const signIn = async (body) => {
     let userData = await userModel.findOne({ email })
     if (!userData) {
         return NotFoundException({ message: "user emile is not found" })
+    }
+    if (!userData.isVerified) {
+        return BadRequestException({ message: "user is not verified cannot login" })
     }
     //check password with argon2
     let isMatch = await checkPassword({ planText: password, hashed: userData.password })

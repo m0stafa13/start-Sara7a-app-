@@ -1,12 +1,15 @@
 import { Router } from "express";
 import { generateAccessToken, getAllUser, getUserById, resendOtp, signIn, signUp, verifyAccount } from "./auth.service.js";
-import { auth, checkRole } from "../../common/middleware/index.js";
+import { auth, checkRole, upload } from "../../common/middleware/index.js";
 import { userLoginSchema, userSignupSchema } from "./auth.validation.js";
 import { validation } from "../../common/service/validation.service.js";
+
 const router = Router()
 // sign up 
-router.post("/signup", validation(userSignupSchema), async (req, res) => {
-    let data = await signUp(req.data)
+// upload is middleware to upload image 
+// validation is middleware to validate input using zod 
+router.post("/signup", upload().single("image"), validation(userSignupSchema), async (req, res) => {
+    let data = await signUp(req.data, req.file)
     res.json(data)
 })
 // login
