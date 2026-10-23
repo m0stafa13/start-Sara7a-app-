@@ -8,9 +8,6 @@ export const signUp = async (body, file) => {
     let profileImage;
     if (file) {
         profileImage = file.path
-        console.log(profileImage);
-
-
     }
 
     let { name, email, password, age, confirmPassword, gender, dateOfBirth } = body

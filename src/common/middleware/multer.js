@@ -11,7 +11,17 @@ export const upload = () => {
             cb(null, `${Date.now()}-${file.originalname}`)
         }
     })
-    return multer({ storage })
+    // multer validation 
+    const fileFilter = (req, file, cb) => {
+        // types are allowed
+        const allowedType = ["image/png", "image/jpeg", "image/jpg"]
+        if (!allowedType.includes(file.mimetype)) {
+            return cb(new Error("invalid image format"), false)
+        }
+        cb(null, true)
+    }
+
+    return multer({ storage, fileFilter })
 }
 
 
