@@ -11,7 +11,7 @@ let adminRefreshSignature = process.env.ADMIN_REFRESH_SIGNATURE
 let userRefreshSignature = process.env.USER_REFRESH_SIGNATURE
 let mainEmail = process.env.EMAIL
 let pass = process.env.PASSWORD
-
+let redisUri = process.env.REDIS_URI
 export const env = {
     port,
     uri,
@@ -21,5 +21,6 @@ export const env = {
     userSignature,
     adminRefreshSignature,
     userRefreshSignature,
-    mainEmail, pass
+    mainEmail, pass,
+    redisUri
 }
