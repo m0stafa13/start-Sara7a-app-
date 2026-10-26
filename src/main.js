@@ -4,11 +4,12 @@ import { databaseConnection } from './database/connection.js'
 import authRouter from './module/auth/auth.controller.js'
 import { fileURLToPath } from 'url';
 import path from "path"
+import { redisConnection } from './database/redis/index.js';
 
 const app = express()
 databaseConnection()
-
-
+// client from redis connection 
+const client = await redisConnection()
 // get file name using es6
 const __filename = fileURLToPath(import.meta.url)
 // get file directory using es6
@@ -32,4 +33,4 @@ app.use((err, req, res, next) => {
         extra
     })
 })
-app.listen(env.port, () => console.log(`Example app listening on port ${env.port}!`)) 
+app.listen(env.port, () => console.log(`Express app listening on port ${env.port}!`)) 
