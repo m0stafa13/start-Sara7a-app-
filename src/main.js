@@ -9,7 +9,7 @@ import { redisConnection } from './database/redis/index.js';
 const app = express()
 databaseConnection()
 // client from redis connection 
-const client = await redisConnection()
+export const client = await redisConnection()
 // get file name using es6
 const __filename = fileURLToPath(import.meta.url)
 // get file directory using es6

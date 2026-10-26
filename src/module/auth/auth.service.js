@@ -3,6 +3,8 @@ import { userModel } from "../../database/model/user.model.js";
 import { BadRequestException, ConflictException, ErrorResponse, NotFoundException } from "../../common/exception/error.exceptions.js";
 import { generateToken } from "../../common/index.js";
 import { sendEmail } from "../../common/middleware/sendEmail.js";
+import { get, set } from "../../database/redis/index.js";
+
 // sign up 
 export const signUp = async (body, file) => {
     let profileImage;
@@ -22,7 +24,8 @@ export const signUp = async (body, file) => {
         if (hashedPassword) {
             let otp = Math.round(Math.random() * 1000000)
             // adding user to db 
-            let addUser = await userModel.create({ name, email, password: hashedPassword, age, gender, dateOfBirth, otp, profileImage })
+            let addUser = await userModel.create({ name, email, password: hashedPassword, age, gender, dateOfBirth, profileImage })
+            set(`otp::${addUser._id}`, otp, 60)
             // sent otp to user to verify account 
             sendEmail({ to: email, subject: "sign up", html: `<h1> your otp is ${otp}</h1>` })
             if (addUser) {
@@ -98,9 +101,10 @@ export const verifyAccount = async (body) => {
     if (userData[0].isVerified) {
         throw BadRequestException({ message: "user already verified" })
     }
-    if (userData[0].otp == otp) {
+    let redisOtp = await get(`otp::${userData[0]._id}`)
+    if (redisOtp == otp) {
         userData[0].isVerified = true
-        userData[0].otp = null
+        userData[0].__v = userData[0].__v + 1
         await userData[0].save()
         return userData
     } else {
@@ -116,8 +120,7 @@ export const resendOtp = async (data) => {
             return BadRequestException({ message: "user already verified" })
         }
         let otp = Math.round(Math.random() * 1000000)
-        userData.otp = otp
-        userData.save()
+        set(`otp::${userData._id}`, otp, 120)
         sendEmail({ to: email, subject: `Resend otp from sara7a app`, html: `Your otp is ${otp}` })
         return {
             message: "OTP already sent on your email"
