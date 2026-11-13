@@ -18,7 +18,6 @@ export const inc = (key) => {
 export const decr = (key) => {
     return client.decr(key)
 }
-
 export const mset = (key) => {
     return client.mSet(key)
 }

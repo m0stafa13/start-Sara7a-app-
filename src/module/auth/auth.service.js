@@ -26,6 +26,7 @@ export const signUp = async (body, file) => {
             // adding user to db 
             let addUser = await userModel.create({ name, email, password: hashedPassword, age, gender, dateOfBirth, profileImage })
             set(`otp::${addUser._id}`, otp, 60)
+
             // sent otp to user to verify account 
             sendEmail({ to: email, subject: "sign up", html: `<h1> your otp is ${otp}</h1>` })
             if (addUser) {

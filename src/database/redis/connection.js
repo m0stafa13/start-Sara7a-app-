@@ -5,7 +5,6 @@ export const redisConnection = async () => {
     const client = createClient({
         url: env.redisUri
     });
-
     client.on("error", function (err) {
         throw err;
     });
