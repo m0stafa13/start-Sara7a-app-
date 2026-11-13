@@ -5,6 +5,7 @@ import authRouter from './module/auth/auth.controller.js'
 import { fileURLToPath } from 'url';
 import path from "path"
 import { redisConnection } from './database/redis/index.js';
+import messageRouter from './module/message/message.controller.js';
 
 const app = express()
 databaseConnection()
@@ -20,6 +21,7 @@ const uploadPath = path.resolve(__direname, "../uploads")
 
 app.use(express.json())
 app.use("/auth", authRouter)
+app.use("/message", messageRouter)
 // to return image to front as image same logic app.use("/auth" , authRouter) work like express.json()
 app.use("/uploads", express.static(uploadPath))
 app.use((err, req, res, next) => {
