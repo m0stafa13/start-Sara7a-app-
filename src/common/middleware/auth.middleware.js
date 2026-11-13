@@ -3,6 +3,9 @@ import { env } from "../../config/config.service.js";
 import { BadRequestException } from "../exception/error.exceptions.js";
 
 export const auth = async (req, res, next) => {
+    if (!req.headers.authorization) {
+        return BadRequestException({ message: "Token is req || login first" })
+    }
     let [flag, token] = req.headers.authorization.split(" ")
 
     switch (flag) {
@@ -30,7 +33,6 @@ export const auth = async (req, res, next) => {
             let decodedData = jwt.verify(token, signature)
             if (decodedData) {
                 req.user = decodedData
-                 
                 next()
             }
             else {

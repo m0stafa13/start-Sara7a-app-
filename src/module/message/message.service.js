@@ -3,7 +3,7 @@ import { messageModel } from "../../database/model/message.model.js"
 
 export const getAllMessage = async () => {
     let messages = await messageModel.find()
-    if (messages.length == 0) {
+    if (!messages.length == 0) {
         return NotFoundException({ message: "No message found" })
     }
     return {
