@@ -23,8 +23,9 @@ export const signUp = async (body, file) => {
         let hashedPassword = await generateHash({ planText: password })
         if (hashedPassword) {
             let otp = Math.round(Math.random() * 1000000)
+            let uniqueName = email.split("@")[0]
             // adding user to db 
-            let addUser = await userModel.create({ name, email, password: hashedPassword, age, gender, dateOfBirth, profileImage })
+            let addUser = await userModel.create({ name, email, password: hashedPassword, age, gender, dateOfBirth, profileImage, uniqueName })
             set(`otp::${addUser._id}`, otp, 60)
 
             // sent otp to user to verify account 
@@ -59,10 +60,12 @@ export const signIn = async (body) => {
     if (isMatch) {
         // generate token 
         let { accessToken, refreshToken } = await generateToken(userData)
+        let url = `https://sara7a/${userData.uniqueName}`
         return {
             message: "login successfully",
+            url,
             token: accessToken,
-            ref: refreshToken
+            ref: refreshToken,
         }
     } else {
         return BadRequestException({ message: "incorrect password" })

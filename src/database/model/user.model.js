@@ -49,6 +49,11 @@ const userSchema = mongoose.Schema({
     dateOfBirth: {
         type: Date,
         required: true
+    },
+    uniqueName: {
+        type: String,
+        required: true,
+        unique: true
     }
 
 }, {

@@ -43,4 +43,6 @@ router.get('/get-all-users', auth, checkRole(["1"]), async (req, res) => {
     res.json(data)
 })
 
+
+
 export default router
